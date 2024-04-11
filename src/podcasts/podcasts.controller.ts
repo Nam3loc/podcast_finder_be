@@ -11,13 +11,13 @@ export class PodcastsController {
     }
 
     @Get(':id')
-    findOne() {
-        return 'fetch podcast based on id';
+    findOne(id) {
+        return `fetch podcast based on ${id}`;
     }
 
     @Put(':id')
-    update() {
-        return 'update podcast based on id';
+    update(id) {
+        return `update podcast based on ${id}`;
     }
 
     @Post()
@@ -26,7 +26,7 @@ export class PodcastsController {
     }
 
     @Delete(':id')
-    delete() {
-        return 'delete podcast based on id';
+    delete(id) {
+        return `delete podcast based on ${id}`;
     }
 }

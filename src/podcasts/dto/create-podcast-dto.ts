@@ -1,4 +1,5 @@
-import { IsArray, IsDate, IsDateString, IsMilitaryTime, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsDateString, IsMilitaryTime, IsNotEmpty, IsString, Validate } from "class-validator";
+import { IsMilitaryTimeWithSeconds } from "./CustomValidators/IsMilitaryTimeWithSeconds";
 
 export class CreatePodcastDTO {
     @IsString()
@@ -6,7 +7,7 @@ export class CreatePodcastDTO {
     readonly title: string;
 
     @IsArray()
-    @IsString()
+    @IsString({ each: true })
     @IsNotEmpty()
     readonly creator: string[];
 
@@ -14,7 +15,8 @@ export class CreatePodcastDTO {
     @IsNotEmpty()
     readonly releaseDate: Date;
 
-    @IsMilitaryTime()
+    @IsString()
+    @Validate(IsMilitaryTimeWithSeconds)
     @IsNotEmpty()
     readonly fullPodcastDuration: Date;
 }

@@ -1,5 +1,6 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { PodcastsService } from './podcasts.service';
+import { CreatePodcastDTO } from './dto/create-podcast-dto';
 
 @Controller('podcasts')
 export class PodcastsController {
@@ -7,7 +8,7 @@ export class PodcastsController {
 
     @Get()
     findAll() {
-        return 'find all podcasts';
+        return this.podcastsService.findAll();
     }
 
     @Get(':id')
@@ -21,8 +22,8 @@ export class PodcastsController {
     }
 
     @Post()
-    create() {
-        return 'create new podcast';
+    create(@Body() createPodcastDTO: CreatePodcastDTO) {
+        return this.podcastsService.create(createPodcastDTO);
     }
 
     @Delete(':id')

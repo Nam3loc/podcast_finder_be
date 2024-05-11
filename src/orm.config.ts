@@ -5,8 +5,10 @@ export const config: TypeOrmModuleOptions = {
     database: 'sound-scout',
     host: 'localhost',
     port: 5432,
-    username: 'postgres',
-    password: 'EZ#@51u!Rm&bEJVvTrq9',
+    username: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
     entities: ['dist/**/*.entity{.ts,.js}'],
     synchronize: true
 }
+
+// May have to hard code username and password. Getting an error using .env

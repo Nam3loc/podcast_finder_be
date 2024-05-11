@@ -10,4 +10,6 @@ async function bootstrap() {
 bootstrap();
 
 
-// https://www.youtube.com/watch?v=sFnAHC9lLaw - 1:27:30 seconds into the video
+// https://www.youtube.com/watch?v=sFnAHC9lLaw - 1:35:00 seconds into the video
+// Created BE for both Playlist and User. Now I need to create a user in postman,
+// then create a playlist with postman, using the user that I created.

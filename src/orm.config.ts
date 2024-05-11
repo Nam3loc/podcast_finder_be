@@ -1,14 +1,15 @@
+import { ConfigService } from "@nestjs/config";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm"
 
-export const config: TypeOrmModuleOptions = {
+export const typeOrmConfig = async (configService: ConfigService): Promise<TypeOrmModuleOptions> => ({
     type: 'postgres',
     database: 'sound-scout',
     host: 'localhost',
     port: 5432,
-    username: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
+    username: configService.get<string>('DATABASE_USER'),
+    password: configService.get<string>('DATABASE_PASSWORD'),
     entities: ['dist/**/*.entity{.ts,.js}'],
-    synchronize: true
-}
+    synchronize: true,
+});
 
-// May have to hard code username and password. Getting an error using .env
+export default typeOrmConfig;

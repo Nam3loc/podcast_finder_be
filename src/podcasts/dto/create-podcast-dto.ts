@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsMilitaryTime, IsNotEmpty, IsString, Validate } from "class-validator";
+import { IsArray, IsDateString, IsNotEmpty, IsString, Validate } from "class-validator";
 import { IsMilitaryTimeWithSeconds } from "./CustomValidators/IsMilitaryTimeWithSeconds";
 
 export class CreatePodcastDTO {

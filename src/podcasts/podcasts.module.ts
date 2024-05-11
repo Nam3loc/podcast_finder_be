@@ -6,4 +6,5 @@ import { PodcastsService } from './podcasts.service';
   controllers: [PodcastsController],
   providers: [PodcastsService]
 })
-export class PodcastsModule {}
+
+export class PodcastsModule { }

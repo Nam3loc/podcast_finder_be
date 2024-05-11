@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { PodcastsModule } from './podcasts/podcasts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeOrmConfig from './orm.config';
+import { PlaylistModule } from './playlists/playlists.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import typeOrmConfig from './orm.config';
       useFactory: async (configService: ConfigService) => await typeOrmConfig(configService),
     }),
     PodcastsModule,
+    PlaylistModule,
     ConfigModule.forRoot()
   ],
   controllers: [AppController],

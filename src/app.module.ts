@@ -6,6 +6,7 @@ import { PodcastsModule } from './podcasts/podcasts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeOrmConfig from './orm.config';
 import { PlaylistModule } from './playlists/playlists.module';
+import { UserModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PlaylistModule } from './playlists/playlists.module';
     }),
     PodcastsModule,
     PlaylistModule,
+    UserModule,
     ConfigModule.forRoot()
   ],
   controllers: [AppController],

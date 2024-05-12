@@ -10,6 +10,7 @@ async function bootstrap() {
 bootstrap();
 
 
-// https://www.youtube.com/watch?v=sFnAHC9lLaw - 1:35:00 seconds into the video
-// Created BE for both Playlist and User. Now I need to create a user in postman,
-// then create a playlist with postman, using the user that I created.
+// https://www.youtube.com/watch?v=sFnAHC9lLaw - 1:33:00 seconds into the video
+// Need to inject repos into podcasts service, and correctly wire up the methods in service
+// Need to fix passing the service into the controller and get the endpoint for podcasts working
+// Create some podcasts in the DB

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, HttpException, HttpStatus, Post } from "@nestjs/common";
 import { CreatePlaylistDTO } from "./dto/create-playlist-dto";
 import { Playlist } from "./playlist.entity";
 import { PlaylistsService } from "./playlists.service";
@@ -12,6 +12,16 @@ export class PlaylistsController {
         @Body()
         playlistDTO: CreatePlaylistDTO
     ): Promise<Playlist> {
-        return this.playlistService.create(playlistDTO);
+        try {
+            return this.playlistService.create(playlistDTO);
+        } catch (e) {
+            throw new HttpException(
+                'Create method failed to create the playlists',
+                HttpStatus.BAD_REQUEST,
+                {
+                    cause: e
+                }
+            )
+        }
     }
 }

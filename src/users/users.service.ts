@@ -9,6 +9,9 @@ import { CreateUserDTO } from "./dto/create-user-dto";
 export class UsersService {
     constructor(
         @InjectRepository(User)
+        private userRepo: Repository<User>,
+
+        @InjectRepository(Playlist)
         private playlistRepo: Repository<Playlist>
     ) { }
 
@@ -17,8 +20,11 @@ export class UsersService {
         user.firstName = userDto.firstName;
         user.lastName = userDto.lastName;
         user.email = userDto.email;
+        user.password = userDto.password;
 
         const playlist = await this.playlistRepo.findByIds(userDto.playlists);
         user.playlists = playlist;
+
+        return this.userRepo.save(user);
     }
 }

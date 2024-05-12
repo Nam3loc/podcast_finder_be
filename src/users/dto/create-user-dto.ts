@@ -18,7 +18,6 @@ export class CreateUserDTO {
     readonly password: string;
 
     @IsArray()
-    @IsNotEmpty()
     @IsNumber({}, { each: true })
-    readonly playlists: number[];
+    readonly playlists?: number[];
 }

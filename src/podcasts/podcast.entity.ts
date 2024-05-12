@@ -10,19 +10,16 @@ export class Podcast {
     @Column()
     title: string;
 
-    @Column('varchar', { array: true })
-    creator: string[];
+    // Many creators can create many podcasts
+    @ManyToMany(() => Creator, (creator) => creator.podcasts)
+    @JoinTable({ name: 'podcasts_creators' })
+    creators: Creator[]
 
     @Column('date')
     releaseDate: Date;
 
     @Column('time')
     fullPodcastDuration: Date;
-
-    // Many creators can create many podcasts
-    @ManyToMany(() => Creator, (creator) => creator.podcasts)
-    @JoinTable({ name: 'podcasts_creators' })
-    creators: Creator[]
 
     // Many podcasts can belong to one playlist for each unique user
     @ManyToOne(() => Playlist, (playlist) => playlist.podcasts)

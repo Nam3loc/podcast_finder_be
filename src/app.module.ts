@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import typeOrmConfig from './orm.config';
 import { PlaylistModule } from './playlists/playlists.module';
 import { UserModule } from './users/users.module';
+import { CreatorModule } from './creators/creators.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './users/users.module';
     PodcastsModule,
     PlaylistModule,
     UserModule,
+    CreatorModule,
     ConfigModule.forRoot()
   ],
   controllers: [AppController],

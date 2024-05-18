@@ -11,6 +11,5 @@ bootstrap();
 
 
 // https://www.youtube.com/watch?v=sFnAHC9lLaw - 1:33:00 seconds into the video
-// Need to inject repos into podcasts service, and correctly wire up the methods in service
-// Need to fix passing the service into the controller and get the endpoint for podcasts working
-// Create some podcasts in the DB
+// Need to finish setting up all of the podcasts methods in the podcast service and controller
+// findAll90 and create() are working correctly. Need to wire up the rest

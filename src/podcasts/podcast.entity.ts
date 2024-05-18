@@ -23,5 +23,5 @@ export class Podcast {
 
     // Many podcasts can belong to one playlist for each unique user
     @ManyToOne(() => Playlist, (playlist) => playlist.podcasts)
-    playlist: Playlist;
+    playlists?: Playlist[];
 }

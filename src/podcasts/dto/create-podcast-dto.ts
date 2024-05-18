@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsString, Validate } from "class-validator";
+import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString, Validate } from "class-validator";
 import { IsMilitaryTimeWithSeconds } from "./CustomValidators/IsMilitaryTimeWithSeconds";
 
 export class CreatePodcastDTO {
@@ -20,7 +20,8 @@ export class CreatePodcastDTO {
     @IsNotEmpty()
     readonly fullPodcastDuration: Date;
 
+    @IsOptional()
     @IsArray()
     @IsNumber({}, { each: true })
-    readonly playlist?: number[];
+    readonly playlists?: number[];
 }

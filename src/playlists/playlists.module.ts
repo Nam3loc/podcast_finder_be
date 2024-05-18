@@ -6,7 +6,6 @@ import { User } from "src/users/user.entity";
 import { PlaylistsController } from "./playlists.controller";
 import { PlaylistsService } from "./playlists.service";
 
-
 @Module({
     imports: [TypeOrmModule.forFeature([Playlist, Podcast, User])],
     controllers: [PlaylistsController],

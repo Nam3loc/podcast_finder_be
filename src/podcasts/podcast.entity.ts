@@ -11,13 +11,13 @@ export class Podcast {
     title: string;
 
     // Many creators can create many podcasts
-    @ManyToMany(() => Creator, (creator) => creator.podcasts)
+    @ManyToMany(() => Creator, creator => creator.podcasts)
     @JoinTable({
         name: "podcast_creators",
         joinColumn: { name: "podcastId", referencedColumnName: "id" },
         inverseJoinColumn: { name: "creatorId", referencedColumnName: "id" }
     })
-    creators: Creator[]
+    creators: Creator[];
 
     @Column('date')
     releaseDate: Date;

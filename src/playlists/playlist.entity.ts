@@ -11,7 +11,9 @@ export class Playlist {
     name: string;
 
     // Each playlist will have multiple podcasts
-    @OneToMany(() => Podcast, (podcast) => podcast.playlists)
+    @OneToMany(() => Podcast, (podcast) => podcast.playlists, {
+        cascade: true
+    })
     podcasts: Podcast[];
 
     // Many playlists can belong to a single unique user

@@ -70,10 +70,24 @@ export class PodcastsService {
         return podcast;
     }
 
+    // async create(podcastDTO: CreatePodcastDTO): Promise<Podcast> {
+    //     const podcast = new Podcast();
+    //     await this.preparePodcast(podcast, podcastDTO);
+    //     return this.podcastRepo.save(podcast);
+    // }
+
     async create(podcastDTO: CreatePodcastDTO): Promise<Podcast> {
         const podcast = new Podcast();
         await this.preparePodcast(podcast, podcastDTO);
-        return this.podcastRepo.save(podcast);
+        this.logger.debug(`Prepared podcast: ${JSON.stringify(podcast)}`);
+        try {
+            const savedPodcast = await this.podcastRepo.save(podcast);
+            this.logger.debug(`Saved podcast: ${JSON.stringify(savedPodcast)}`);
+            return savedPodcast;
+        } catch (error) {
+            this.logger.error(`Failed to save podcast: ${error.message}`, error.stack);
+            throw new BadRequestException('Create method failed to create the podcast');
+        }
     }
 
     async update(id: number, podcastDTO: CreatePodcastDTO): Promise<Podcast> {
@@ -96,5 +110,56 @@ export class PodcastsService {
         } catch (e) {
             throw new BadRequestException(`Failed to delete the podcast: ${e.message}`);
         }
+    }
+
+    async testDummyData(): Promise<void> {
+        this.logger.log('In testDummyData');
+        try {
+            this.logger.log('In testDummyData try');
+
+            // Create a new Creator
+            const creator = new Creator();
+            creator.name = "Sample Creator";
+            const savedCreator = await this.creatorRepo.save(creator);
+            this.logger.log('Saved Creator:', savedCreator);
+
+            // Create a new Podcast DTO
+            const podcastDTO: CreatePodcastDTO = {
+                title: "Sample Podcast",
+                creators: [savedCreator.name], // Assuming creators should be an array of names
+                // releaseDate: new Date("2024-05-19"),
+                // fullPodcastDuration: new Date("01:00:00"),
+                releaseDate: "2024-05-19T00:00:00Z", // ISO 8601 format string
+                fullPodcastDuration: "01:00:00", // Correct format string
+                playlists: []
+            };
+            this.logger.log('Podcast DTO:', podcastDTO);
+
+            // Prepare the Podcast entity
+            const podcast = new Podcast();
+            await this.preparePodcast(podcast, podcastDTO);
+            this.logger.log('Prepared Test Podcast:', podcast);
+
+            // Save the Podcast
+            const savedPodcast = await this.podcastRepo.save(podcast);
+            this.logger.log('Saved Test Podcast:', savedPodcast);
+
+            // Log the results
+            this.logger.log('Saved Test Podcast:', savedPodcast);
+            this.logger.log('Saved Test Creator:', savedCreator);
+        } catch (error) {
+            this.logger.error('Error during testDummyData:', error.message);
+        }
+    }
+
+    async verifyDummyData(): Promise<void> {
+        // Fetch the podcast along with its creators
+        const podcast = await this.podcastRepo.findOne({
+            where: { title: "Sample Podcast" },
+            relations: ["creators"],
+        });
+
+        // Log the fetched data
+        this.logger.log('Fetched Podcast:', podcast);
     }
 }

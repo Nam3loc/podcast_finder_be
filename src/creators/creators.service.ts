@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateCreatorDTO } from "./dto/create-creator-dto";
@@ -15,31 +15,52 @@ export class CreatorsService {
         private podcastsRepo: Repository<Podcast>
     ) { }
 
-    findAll() {
-        return this.creatorsRepo;
+    findAllCreators(): Promise<Creator[]> {
+        return this.creatorsRepo.find();
     }
 
-    findOne() {
-
+    findOneCreatorById(id: number): Promise<Creator> {
+        return this.creatorsRepo.findOne({ where: { id } });
     }
 
-    async create(creatorsDTO: CreateCreatorDTO) {
-        const creator = new Creator();
-        creator.name = creatorsDTO.name;
-
-        if (creatorsDTO.podcasts && creatorsDTO.podcasts.length > 0) {
-            const podcasts = await this.podcastsRepo.findByIds(creatorsDTO.podcasts);
-            creator.podcasts = podcasts;
+    private async handlePodcasts(podcasts?: Podcast[]): Promise<Podcast[]> {
+        if (podcasts && podcasts.length > 0) {
+            return await this.podcastsRepo.findByIds(podcasts);
         }
+        return [];
+    }
 
+    private async prepareCreator(creator: Creator, creatorDTO: CreateCreatorDTO): Promise<Creator> {
+        creator.name = creatorDTO.name;
+        creator.podcasts = await this.handlePodcasts(creatorDTO.podcasts);
+        return creator;
+    }
+
+    async createCreator(creatorDTO: CreateCreatorDTO): Promise<Creator> {
+        const creator = new Creator();
+        await this.prepareCreator(creator, creatorDTO);
         return this.creatorsRepo.save(creator);
     }
 
-    update() {
-
+    async updateCreator(id: number, creatorDTO: CreateCreatorDTO): Promise<Creator> {
+        const creator = await this.creatorsRepo.findOne({ where: { id } });
+        if (!creator) {
+            throw new NotFoundException('Cannot find a creator to update with that unique id.');
+        }
+        await this.prepareCreator(creator, creatorDTO);
+        return this.creatorsRepo.save(creator);
     }
 
-    delete() {
+    async deleteCreator(id: number): Promise<void> {
+        const creator = await this.creatorsRepo.findOne({ where: { id } });
+        if (!creator) {
+            throw new NotFoundException('Cannot find a creator to delete with that unique id.');
+        }
 
+        try {
+            await this.creatorsRepo.remove(creator);
+        } catch (e) {
+            throw new BadRequestException(`Failed to delete the creator: ${e.message}`);
+        }
     }
 }

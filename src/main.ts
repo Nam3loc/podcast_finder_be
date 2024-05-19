@@ -11,12 +11,14 @@ bootstrap();
 
 
 // https://www.youtube.com/watch?v=sFnAHC9lLaw - 1:33:00 seconds into the video
-// Successfully got all the endpoints working. The create podcast endpoint doesnt work
-// when you try to create a podcast with multiple creators. So I looked into the DB and why it
-// wasnt letting me do that. I ended up doing a lot with chatGPT and nothing worked
-// So I tried to implement a new form on the joinTable in the creator and podcast entity
-// but it did not look like it was working. I dropped the table and am now getting an error
-// about a foreign key still existing even though I dropped the table and every time I
-// try to query the fk, it never comes up. I am hoping if I give it time, that the key is
-// just cached and when I come back everything will work. If not, I need to figure out how to
-// get rid of all instances of the fk and recreate the porcasts_creators table using my code
+// I fixed the issue where the DB didnt have the podcast_creators joinTable
+// Added all the methods in the services and controllers for all of my functionality
+// Deleted all existing data in the DB and recreated users and creators
+// When I tried to recreate a podcast, even with just one creator, it failed
+// I am trying to debug that and figure it out
+// My guess is that there is something wrong with the new podcast_creators joinTable that was inserted
+// All of my logging for the create method in the code works which makes me think it is another DB issue
+// I am trying to create test methods to insert dummy data but am now having issues with that
+// Working on trying to get the dummy data figured out, then moving forward to fixing the create
+// Then once I can create a podcast with only one creator, I want to make it to where I can
+// create a podcast with multiple creators.

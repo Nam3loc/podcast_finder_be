@@ -19,11 +19,17 @@ export class Podcast {
     })
     creators: Creator[];
 
+    // @Column('date')
+    // releaseDate: Date;
+
+    // @Column('time')
+    // fullPodcastDuration: Date;
+
     @Column('date')
-    releaseDate: Date;
+    releaseDate: string;
 
     @Column('time')
-    fullPodcastDuration: Date;
+    fullPodcastDuration: string;
 
     // Many podcasts can belong to one playlist for each unique user
     @ManyToOne(() => Playlist, (playlist) => playlist.podcasts)

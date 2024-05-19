@@ -11,14 +11,23 @@ export class CreatePodcastDTO {
     @IsNotEmpty()
     readonly creators: string[];
 
+    // @IsDateString()
+    // @IsNotEmpty()
+    // readonly releaseDate: Date;
+
+    // @IsString()
+    // @Validate(IsMilitaryTimeWithSeconds)
+    // @IsNotEmpty()
+    // readonly fullPodcastDuration: Date;
+
     @IsDateString()
     @IsNotEmpty()
-    readonly releaseDate: Date;
+    readonly releaseDate: string;
 
     @IsString()
     @Validate(IsMilitaryTimeWithSeconds)
     @IsNotEmpty()
-    readonly fullPodcastDuration: Date;
+    readonly fullPodcastDuration: string;
 
     @IsOptional()
     @IsArray()

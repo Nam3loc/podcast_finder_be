@@ -91,4 +91,17 @@ export class PodcastsController {
             )
         }
     }
+
+    // Test controllers
+    @Get('insert')
+    async insertDummyData() {
+        await this.podcastsService.testDummyData();
+        return 'Dummy data inserted';
+    }
+
+    @Get('verify')
+    async verifyDummyData() {
+        await this.podcastsService.verifyDummyData();
+        return 'Dummy data verified';
+    }
 }

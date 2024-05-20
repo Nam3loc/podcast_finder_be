@@ -110,7 +110,7 @@ describe('PodcastsController', () => {
     const updatedPodcast = { title: 'Podcast 1', id: 0 };
 
     // Act: Call the controller method being tested
-    const result = await podcastsController.update(podcast);
+    const result = await podcastsController.update(podcast.id, updatedPodcast);
 
     // Assert: Check that the result matches the expected outcome
     expect(updatedPodcast).toEqual(result);

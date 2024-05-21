@@ -4,6 +4,7 @@ import { CreatePodcastDTO } from './dto/create-podcast-dto';
 import { Podcast } from './podcast.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { NotFoundException } from '@nestjs/common';
 
 // Mock the repository and the entity
 const mockPodcastRepository = {
@@ -150,12 +151,11 @@ describe('PodcastsService', () => {
     }));
   });
 
-  ////////////////////////////////////// STOPPED HERE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   // Testing Update Endpoint : Does not Successfully Update
   it('should not update a single podcast based on an id', async () => {
     // Arrange
     const podcastId = 1;
-    const existingPodcast: Podcast = { id: podcastId, title: 'Original Title', creators: [], releaseDate: '', fullPodcastDuration: '', playlists: [] };
+    const existingPodcast: Podcast = { id: 0, title: 'Original Title', creators: [], releaseDate: '', fullPodcastDuration: '', playlists: [] };
     const updatedPodcast: CreatePodcastDTO = { title: 'Updated Title', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] };
 
     // Mock findOne to return the existingPodcast
@@ -170,113 +170,144 @@ describe('PodcastsService', () => {
     const result = await podcastService.update(podcastId, updatedPodcast);
 
     // Assert
-    expect(result.title).toBe(updatedPodcast.title);
-    expect(result.releaseDate).toBe(updatedPodcast.releaseDate);
-    expect(result.fullPodcastDuration).toBe(updatedPodcast.fullPodcastDuration);
+    expect(result.title).toBeNull();
+    expect(result.releaseDate).toBeNull();
+    expect(result.fullPodcastDuration).toBeNull();
     expect(podcastRepository.findOne).toHaveBeenCalledWith({ where: { id: podcastId } });
-    expect(podcastRepository.save).toHaveBeenCalledWith(expect.objectContaining({
-      id: podcastId,
-      title: updatedPodcast.title,
-      releaseDate: updatedPodcast.releaseDate,
-      fullPodcastDuration: updatedPodcast.fullPodcastDuration,
-    }));
+    expect(podcastRepository.findOne).toBe(NotFoundException);
   });
 
   // Testing Update Endpoint : Null : Success
   it('should update a single podcast based on an id', async () => {
-    // Arrange: Get a single podcast based off an id
-    const podcast = [];
+    // Arrange
+    const podcastId = 1;
+    const existingPodcast: Podcast = { id: null, title: null, creators: null, releaseDate: null, fullPodcastDuration: null, playlists: null };
+    const updatedPodcast: CreatePodcastDTO = { title: 'Updated Title', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] };
 
-    // Act: Call the service method being tested
-    const result = await podcastService.update(podcast);
+    // Mock findOne to return the existingPodcast
+    mockPodcastRepository.findOne.mockResolvedValue(existingPodcast);
+    // Mock save to return the updated podcast
+    mockPodcastRepository.save.mockResolvedValue({
+      ...existingPodcast,
+      ...updatedPodcast,
+    });
 
-    // Assert: Check that the result matches the expected outcome
-    expect(result).toBeNull();
+    // Act
+    const result = await podcastService.update(podcastId, updatedPodcast);
+
+    // Assert
+    expect(result.title).toBeNull();
+    expect(result.releaseDate).toBeNull();
+    expect(result.fullPodcastDuration).toBeNull();
+    expect(podcastRepository.findOne).toBeNull();
   });
 
   ////////// CREATE \\\\\\\\\\
 
   // Testing Create Endpoint : Successfully Creates
-  it('should update a single podcast based on an id', async () => {
-    // Arrange: Get a single podcast based off an id
-    const podcast = [];
+  it('should create a single podcast', async () => {
+    // Arrange
+    const podcastDTO: CreatePodcastDTO = { title: 'Title', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] };
 
     // Act: Call the service method being tested
-    const result = await podcastService.create();
+    const result = await podcastService.create(podcastDTO);
 
     // Assert: Check that the result matches the expected outcome
-    expect(podcast).toEqual(result);
+    expect(result.title).toBeTruthy();
+    expect(result.releaseDate).toBeTruthy();
+    expect(result.fullPodcastDuration).toBeTruthy();
+    expect(podcastRepository.create).toHaveBeenCalledWith(expect.objectContaining({
+      title: podcastDTO.title,
+      releaseDate: podcastDTO.releaseDate,
+      fullPodcastDuration: podcastDTO.fullPodcastDuration,
+    }));
   });
 
-  // // Testing Create Endpoint : Does not Successfully Create
-  // it('should update a single podcast based on an id', async () => {
-  //   // Arrange: Get a single podcast based off an id
-  //   const podcast = [];
+  // Testing Create Endpoint : Does not Successfully Create
+  it('should not create a single podcast becuase it is empty', async () => {
+    // Arrange
+    const podcastDTO: CreatePodcastDTO = {
+      title: '',
+      creators: [],
+      releaseDate: '',
+      fullPodcastDuration: '',
+      playlists: []
+    };
 
-  //   // Act: Call the service method being tested
-  //   const result = await podcastService.create();
+    // Act and Assert
+    await expect(podcastService.create(podcastDTO)).toThrow(NotFoundException);
+  });
 
-  //   // Assert: Check that the result matches the expected outcome
-  //   expect(podcast).toEqual(result);
-  // });
+  // Testing Create Endpoint : Null : Success
+  it('should not create a single podcast because it is null', async () => {
+    // Arrange
+    const podcastDTO: CreatePodcastDTO = {
+      title: null,
+      creators: null,
+      releaseDate: null,
+      fullPodcastDuration: null,
+      playlists: null
+    };
 
-  // // Testing Create Endpoint : Null : Success
-  // it('should update a single podcast based on an id', async () => {
-  //   // Arrange: Get a single podcast based off an id
-  //   const podcast = [];
+    // Act: Call the service method being tested
+    const result = await podcastService.create(podcastDTO);
 
-  //   // Act: Call the service method being tested
-  //   const result = await podcastService.create();
-
-  //   // Assert: Check that the result matches the expected outcome
-  //   expect(result).toBeNull();
-  // });
+    // Assert: Check that the result matches the expected outcome
+    expect(result).toBeNull();
+  });
 
   ////////// DELETE \\\\\\\\\\
 
   // Testing Delete Endpoint : Successfully Deletes
-  it('should update a single podcast based on an id', async () => {
+  it('should delete a single podcast based on an id', async () => {
     // Arrange: Get a single podcast based off an id
-    const podcast = { title: 'Podcast 0', id: 0 };
+    const podcastId = 1;
+    const existingPodcast: Podcast = { id: podcastId, title: 'Updated Title', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] };
 
     // Act: Call the service method being tested
-    const result = await podcastService.update(podcast[0]);
+    await podcastService.delete(podcastId);
 
     // Assert: Check that the result matches the expected outcome
-    expect(result.length).toEqual(0);
+    expect(existingPodcast).toBeNull();
   });
 
   // Testing Delete Endpoint : Does not Successfully Delete : Success
-  it('should update a single podcast based on an id', async () => {
+  it('should not delete a single podcast based on an id', async () => {
     // Arrange: Get a single podcast based off an id
-    const podcast = [{ title: 'Podcast 0', id: 0 }, { title: 'Podcast 1', id: 1 }];
+    const podcasts = [
+      { id: 1, title: 'Title 1', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] },
+      { id: 2, title: 'Title 2', creators: [], releaseDate: '2024-02-02', fullPodcastDuration: '02:00:00', playlists: [] }
+    ];
 
     // Act: Call the service method being tested
-    const result = await podcastService.delete(podcast[2]);
+    const result = await podcastService.delete(podcasts[2].id);
 
     // Assert: Check that the result matches the expected outcome
-    expect(podcast.length).toEqual(result);
+    expect(result).toBeFalsy();
   });
 
   // Testing Delete Endpoint : Deletes One in a List
-  it('should update a single podcast based on an id', async () => {
+  it('should delete a single podcast based on an id from a list of podcasts', async () => {
     // Arrange: Get a single podcast based off an id
-    const podcast = [{ title: 'Podcast 0', id: 0 }, { title: 'Podcast 1', id: 1 }];
-
+    const podcasts = [
+      { id: 1, title: 'Title 1', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] },
+      { id: 2, title: 'Title 2', creators: [], releaseDate: '2024-02-02', fullPodcastDuration: '02:00:00', playlists: [] }
+    ];
     // Act: Call the service method being tested
-    const result = await podcastService.delete(podcast[1]);
+    const result = await podcastService.delete(podcasts[1].id);
 
     // Assert: Check that the result matches the expected outcome
-    expect(podcast.length).toEqual(1);
+    expect(podcasts[0]).toBeTruthy();
+    expect(podcasts[1]).toBeNull();
   });
 
   // Testing Delete Endpoint : Null : Success
-  it('should update a single podcast based on an id', async () => {
+  it('should not delete a single podcast based on an id because it is null', async () => {
     // Arrange: Get a single podcast based off an id
-    const podcast = [];
+    const nullPodcast: Podcast = { id: null, title: null, creators: null, releaseDate: null, fullPodcastDuration: null, playlists: null };
 
     // Act: Call the service method being tested
-    const result = await podcastService.delete(podcast[0]);
+    const result = await podcastService.delete(nullPodcast.id);
 
     // Assert: Check that the result matches the expected outcome
     expect(result).toBeNull();

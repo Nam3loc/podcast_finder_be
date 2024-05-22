@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
 import { PodcastsService } from './podcasts.service';
 import { CreatePodcastDTO } from './dto/create-podcast-dto';
@@ -20,7 +21,10 @@ describe('PodcastsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PodcastsService,
-        { provide: getRepositoryToken(Podcast), useValue: mockPodcastRepository }
+        {
+          provide: getRepositoryToken(Podcast),
+          useValue: mockPodcastRepository,
+        },
       ],
     }).compile();
 
@@ -88,7 +92,10 @@ describe('PodcastsService', () => {
   // Testing GetOne Endpoint: Multiple inputs | Chooses right one : Success
   it('should return a single podcast from the array of multiple podcasts', async () => {
     // Arrange: Define the expected podcast (assuming it's the first podcast in the list)
-    const podcasts = [{ title: 'Podcast 1', id: 0 }, { title: 'Podcast 2', id: 1 }];
+    const podcasts = [
+      { title: 'Podcast 1', id: 0 },
+      { title: 'Podcast 2', id: 1 },
+    ];
 
     // Act: Call the service method being tested
     const result = await podcastService.findOne(1);
@@ -100,7 +107,10 @@ describe('PodcastsService', () => {
   // Testing GetOne Endpoint: No input found :  Failure
   it('should return a podcast that does not match desired result', async () => {
     // Arrange: Define the list of podcasts
-    const listOfPodcasts = [{ title: 'Podcast 1', id: 1 }, { title: 'Podcast 2', id: 2 }];
+    const listOfPodcasts = [
+      { title: 'Podcast 1', id: 1 },
+      { title: 'Podcast 2', id: 2 },
+    ];
 
     // Act: Call the service method being tested
     const result = await podcastService.findOne(2);
@@ -124,8 +134,21 @@ describe('PodcastsService', () => {
   it('should update a single podcast based on an id', async () => {
     // Arrange
     const podcastId = 1;
-    const existingPodcast: Podcast = { id: podcastId, title: 'Original Title', creators: [], releaseDate: '', fullPodcastDuration: '', playlists: [] };
-    const updatedPodcast: CreatePodcastDTO = { title: 'Updated Title', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] };
+    const existingPodcast: Podcast = {
+      id: podcastId,
+      title: 'Original Title',
+      creators: [],
+      releaseDate: '',
+      fullPodcastDuration: '',
+      playlists: [],
+    };
+    const updatedPodcast: CreatePodcastDTO = {
+      title: 'Updated Title',
+      creators: [],
+      releaseDate: '2024-01-01',
+      fullPodcastDuration: '01:00:00',
+      playlists: [],
+    };
 
     // Mock findOne to return the existingPodcast
     mockPodcastRepository.findOne.mockResolvedValue(existingPodcast);
@@ -142,12 +165,14 @@ describe('PodcastsService', () => {
     expect(result.title).toBe(updatedPodcast.title);
     expect(result.releaseDate).toBe(updatedPodcast.releaseDate);
     expect(result.fullPodcastDuration).toBe(updatedPodcast.fullPodcastDuration);
+    // eslint-disable-next-line prettier/prettier
     expect(podcastRepository.findOne).toHaveBeenCalledWith({ where: { id: podcastId } });
+    // eslint-disable-next-line prettier/prettier
     expect(podcastRepository.save).toHaveBeenCalledWith(expect.objectContaining({
-      id: podcastId,
-      title: updatedPodcast.title,
-      releaseDate: updatedPodcast.releaseDate,
-      fullPodcastDuration: updatedPodcast.fullPodcastDuration,
+    	id: podcastId,
+        title: updatedPodcast.title,
+        releaseDate: updatedPodcast.releaseDate,
+        fullPodcastDuration: updatedPodcast.fullPodcastDuration,
     }));
   });
 
@@ -155,8 +180,21 @@ describe('PodcastsService', () => {
   it('should not update a single podcast based on an id', async () => {
     // Arrange
     const podcastId = 1;
-    const existingPodcast: Podcast = { id: 0, title: 'Original Title', creators: [], releaseDate: '', fullPodcastDuration: '', playlists: [] };
-    const updatedPodcast: CreatePodcastDTO = { title: 'Updated Title', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] };
+    const existingPodcast: Podcast = {
+      id: 0,
+      title: 'Original Title',
+      creators: [],
+      releaseDate: '',
+      fullPodcastDuration: '',
+      playlists: [],
+    };
+    const updatedPodcast: CreatePodcastDTO = {
+      title: 'Updated Title',
+      creators: [],
+      releaseDate: '2024-01-01',
+      fullPodcastDuration: '01:00:00',
+      playlists: [],
+    };
 
     // Mock findOne to return the existingPodcast
     mockPodcastRepository.findOne.mockResolvedValue(existingPodcast);
@@ -173,6 +211,7 @@ describe('PodcastsService', () => {
     expect(result.title).toBeNull();
     expect(result.releaseDate).toBeNull();
     expect(result.fullPodcastDuration).toBeNull();
+    // eslint-disable-next-line prettier/prettier
     expect(podcastRepository.findOne).toHaveBeenCalledWith({ where: { id: podcastId } });
     expect(podcastRepository.findOne).toBe(NotFoundException);
   });
@@ -181,8 +220,21 @@ describe('PodcastsService', () => {
   it('should update a single podcast based on an id', async () => {
     // Arrange
     const podcastId = 1;
-    const existingPodcast: Podcast = { id: null, title: null, creators: null, releaseDate: null, fullPodcastDuration: null, playlists: null };
-    const updatedPodcast: CreatePodcastDTO = { title: 'Updated Title', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] };
+    const existingPodcast: Podcast = {
+      id: null,
+      title: null,
+      creators: null,
+      releaseDate: null,
+      fullPodcastDuration: null,
+      playlists: null,
+    };
+    const updatedPodcast: CreatePodcastDTO = {
+      title: 'Updated Title',
+      creators: [],
+      releaseDate: '2024-01-01',
+      fullPodcastDuration: '01:00:00',
+      playlists: [],
+    };
 
     // Mock findOne to return the existingPodcast
     mockPodcastRepository.findOne.mockResolvedValue(existingPodcast);
@@ -207,7 +259,13 @@ describe('PodcastsService', () => {
   // Testing Create Endpoint : Successfully Creates
   it('should create a single podcast', async () => {
     // Arrange
-    const podcastDTO: CreatePodcastDTO = { title: 'Title', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] };
+    const podcastDTO: CreatePodcastDTO = {
+      title: 'Title',
+      creators: [],
+      releaseDate: '2024-01-01',
+      fullPodcastDuration: '01:00:00',
+      playlists: [],
+    };
 
     // Act: Call the service method being tested
     const result = await podcastService.create(podcastDTO);
@@ -216,10 +274,11 @@ describe('PodcastsService', () => {
     expect(result.title).toBeTruthy();
     expect(result.releaseDate).toBeTruthy();
     expect(result.fullPodcastDuration).toBeTruthy();
+    // eslint-disable-next-line prettier/prettier
     expect(podcastRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-      title: podcastDTO.title,
-      releaseDate: podcastDTO.releaseDate,
-      fullPodcastDuration: podcastDTO.fullPodcastDuration,
+        title: podcastDTO.title,
+        releaseDate: podcastDTO.releaseDate,
+        fullPodcastDuration: podcastDTO.fullPodcastDuration,
     }));
   });
 
@@ -262,7 +321,14 @@ describe('PodcastsService', () => {
   it('should delete a single podcast based on an id', async () => {
     // Arrange: Get a single podcast based off an id
     const podcastId = 1;
-    const existingPodcast: Podcast = { id: podcastId, title: 'Updated Title', creators: [], releaseDate: '2024-01-01', fullPodcastDuration: '01:00:00', playlists: [] };
+    const existingPodcast: Podcast = {
+      id: podcastId,
+      title: 'Updated Title',
+      creators: [],
+      releaseDate: '2024-01-01',
+      fullPodcastDuration: '01:00:00',
+      playlists: [],
+    };
 
     // Act: Call the service method being tested
     await podcastService.delete(podcastId);
@@ -294,7 +360,7 @@ describe('PodcastsService', () => {
       { id: 2, title: 'Title 2', creators: [], releaseDate: '2024-02-02', fullPodcastDuration: '02:00:00', playlists: [] }
     ];
     // Act: Call the service method being tested
-    const result = await podcastService.delete(podcasts[1].id);
+    await podcastService.delete(podcasts[1].id);
 
     // Assert: Check that the result matches the expected outcome
     expect(podcasts[0]).toBeTruthy();

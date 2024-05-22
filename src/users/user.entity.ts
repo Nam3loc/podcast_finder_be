@@ -19,6 +19,8 @@ export class User {
     password: string;
 
     // One user can create many playlists
-    @OneToMany(() => Playlist, (playlist) => playlist.user)
+    @OneToMany(() => Playlist, (playlist) => playlist.user, {
+        cascade: true
+    })
     playlists: Playlist[];
 }

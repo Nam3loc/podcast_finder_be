@@ -30,7 +30,7 @@ export class PodcastsController {
         id: number
     ) {
         try {
-            return `fetch podcast based on ${id}`;
+            return this.podcastsService.findOne(id);
         } catch (e) {
             throw new HttpException(
                 'FindOne method failed to get a podcast',
@@ -43,15 +43,12 @@ export class PodcastsController {
     }
 
     @Put(':id')
-    update(
-        @Param(
-            'id',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
-        id: number
+    async update(
+        @Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number,
+        @Body() createPodcastDTO: CreatePodcastDTO
     ) {
         try {
-            return `update podcast based on ${id}`;
+            return await this.podcastsService.update(id, createPodcastDTO);
         } catch (e) {
             throw new HttpException(
                 'Update method failed to update a podcast',
@@ -64,9 +61,9 @@ export class PodcastsController {
     }
 
     @Post()
-    create(@Body() createPodcastDTO: CreatePodcastDTO) {
+    async create(@Body() createPodcastDTO: CreatePodcastDTO) {
         try {
-            return this.podcastsService.create(createPodcastDTO);
+            return await this.podcastsService.create(createPodcastDTO);
         } catch (e) {
             throw new HttpException(
                 'Create method failed to create the podcast',
@@ -79,15 +76,11 @@ export class PodcastsController {
     }
 
     @Delete(':id')
-    delete(
-        @Param(
-            'id',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
-        id: number
+    async delete(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number,
     ) {
         try {
-            return `delete podcast based on ${id}`;
+            await this.podcastsService.delete(id);
+            return { message: 'Podcast deleted successfully' };
         } catch (e) {
             throw new HttpException(
                 'Delete method failed to delete the podcast',
@@ -97,5 +90,18 @@ export class PodcastsController {
                 }
             )
         }
+    }
+
+    // Test controllers
+    @Get('insert')
+    async insertDummyData() {
+        await this.podcastsService.testDummyData();
+        return 'Dummy data inserted';
+    }
+
+    @Get('verify')
+    async verifyDummyData() {
+        await this.podcastsService.verifyDummyData();
+        return 'Dummy data verified';
     }
 }

@@ -11,15 +11,25 @@ export class Podcast {
     title: string;
 
     // Many creators can create many podcasts
-    @ManyToMany(() => Creator, (creator) => creator.podcasts)
-    @JoinTable({ name: 'podcasts_creators' })
-    creators: Creator[]
+    @ManyToMany(() => Creator, creator => creator.podcasts)
+    @JoinTable({
+        name: "podcast_creators",
+        joinColumn: { name: "podcastId", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "creatorId", referencedColumnName: "id" }
+    })
+    creators: Creator[];
+
+    // @Column('date')
+    // releaseDate: Date;
+
+    // @Column('time')
+    // fullPodcastDuration: Date;
 
     @Column('date')
-    releaseDate: Date;
+    releaseDate: string;
 
     @Column('time')
-    fullPodcastDuration: Date;
+    fullPodcastDuration: string;
 
     // Many podcasts can belong to one playlist for each unique user
     @ManyToOne(() => Playlist, (playlist) => playlist.podcasts)

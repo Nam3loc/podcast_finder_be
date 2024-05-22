@@ -9,7 +9,7 @@ export class CreatorsController {
     @Get()
     findAll() {
         try {
-            return this.creatorsService.findAll()
+            return this.creatorsService.findAllCreators();
         } catch (e) {
             throw new HttpException(
                 'FindAll method failed to get the creators',
@@ -23,14 +23,17 @@ export class CreatorsController {
 
     @Get(':id')
     findOne(
-        @Param(':id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }))
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
         id: number
     ) {
         try {
-            return `fetch creators based on ${id}`;
+            return this.creatorsService.findOneCreatorById(id);
         } catch (e) {
             throw new HttpException(
-                'FindOne method failed to get a podcast',
+                'FindOne method failed to get a creator',
                 HttpStatus.BAD_REQUEST,
                 {
                     cause: e
@@ -40,15 +43,15 @@ export class CreatorsController {
     }
 
     @Put(':id')
-    update(
-        @Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }))
-        id: number
+    async update(
+        @Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number,
+        @Body() createCreatorDTO: CreateCreatorDTO
     ) {
         try {
-            return `update creators based on ${id}`;
+            return await this.creatorsService.updateCreator(id, createCreatorDTO);
         } catch (e) {
             throw new HttpException(
-                'Update method failed to update a podcast',
+                'Update method failed to update a creator',
                 HttpStatus.BAD_REQUEST,
                 {
                     cause: e
@@ -58,12 +61,12 @@ export class CreatorsController {
     }
 
     @Post()
-    create(@Body() createCreatorsDTO: CreateCreatorDTO) {
+    async create(@Body() createCreatorDTO: CreateCreatorDTO) {
         try {
-            return this.creatorsService.create(createCreatorsDTO);
+            return await this.creatorsService.createCreator(createCreatorDTO);
         } catch (e) {
             throw new HttpException(
-                'Create method failed to create the podcast',
+                'Create method failed to create the creator',
                 HttpStatus.BAD_REQUEST,
                 {
                     cause: e
@@ -73,15 +76,14 @@ export class CreatorsController {
     }
 
     @Delete(':id')
-    delete(
-        @Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }))
-        id: number
+    async delete(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number,
     ) {
         try {
-            return `delete creators based on ${id}`;
+            await this.creatorsService.deleteCreator(id);
+            return { message: 'Creator deleted successfully' };
         } catch (e) {
             throw new HttpException(
-                'Delete method failed to delete the podcast',
+                'Delete method failed to delete the creator',
                 HttpStatus.BAD_REQUEST,
                 {
                     cause: e

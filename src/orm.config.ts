@@ -10,6 +10,7 @@ export const typeOrmConfig = async (configService: ConfigService): Promise<TypeO
     password: configService.get<string>('DATABASE_PASSWORD'),
     entities: ['dist/**/*.entity{.ts,.js}'],
     synchronize: true,
+    logging: true
 });
 
 export default typeOrmConfig;

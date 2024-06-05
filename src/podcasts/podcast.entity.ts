@@ -11,7 +11,7 @@ export class Podcast {
     title: string;
 
     // Many creators can create many podcasts
-    @ManyToMany(() => Creator, creator => creator.podcasts)
+    @ManyToMany(() => Creator, creator => creator.podcasts, { cascade: true })
     @JoinTable({
         name: "podcast_creators",
         joinColumn: { name: "podcastId", referencedColumnName: "id" },
